@@ -1,0 +1,115 @@
+[build-system]
+requires = ["setuptools>=61.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "quant-strategy"
+version = "0.1.0"
+description = "PLACEHOLDER — the daily agent updates this for its strategy thesis."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=1.26",
+    "pandas>=2.2",
+    "pyarrow>=16",
+    "scipy>=1.13",
+    "statsmodels>=0.14",
+    "structlog>=24.1",
+]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.1.0",
+    "ruff==0.15.10",
+    "pyright>=1.1.403",
+    "pytest>=8.3.0",
+    "pytest-cov>=7.1.0",
+    "pandas-stubs>=2.2",
+]
+
+[tool.setuptools]
+packages = ["qf", "killtest"]
+
+[tool.pyright]
+typeCheckingMode = "strict"
+reportMissingTypeStubs = false
+# pandas / statsmodels / pytest ship without complete stubs; their return types surface as
+# "unknown" under strict mode. Relax only the unknown-type family, keeping the rest strict.
+reportUnknownVariableType = false
+reportUnknownMemberType = false
+reportUnknownArgumentType = false
+# Tests and offline tooling deliberately exercise private helpers.
+reportPrivateUsage = false
+venv = ".venv"
+venvPath = "."
+
+[tool.pytest.ini_options]
+addopts = ["--import-mode=importlib", "--showlocals", "-vv"]
+pythonpath = ["."]
+markers = [
+    "slow: tests that take more than 10s to run; run in CI or nightly",
+    "network: tests that hit live external APIs; skipped by default",
+    "data: tests that need a staged data snapshot; skipped by default",
+    "llm: tests that call a live LLM provider; skipped by default",
+]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.ruff.lint]
+select = [
+    "E", "F", "I", "N", "W", "ANN", "B", "BLE", "C4", "COM",
+    "D", "EM", "ERA", "FBT", "FIX", "G", "INP", "PD", "PT",
+    "PTH", "PLR", "RET", "S", "SIM", "SLF", "T20", "TC", "TRY", "UP"
+]
+ignore = [
+    "C408",   # Unnecessary dict() call
+    "COM812", # formatter recommends disabling
+    "D100", "D101", "D102", "D103", "D104", "D105", "D107", # Missing docstrings
+    "D203",   # blank lines before class
+    "D205",   # blank line after first line of docstring
+    "D213",   # multi line summary second line
+    "D401",   # docstring should be in imperative mood
+    "E501",   # line too long (handled by formatter)
+    "EM101",  # raw string in exception
+    "EM102",  # formatted string in exception
+    "ERA001", # commented out code
+    "FBT001", # use of bools in function definitions
+    "FBT003", # Bool position arguments
+    "FIX002", # TODOs
+    "FIX004", # Hacks
+    "N803",   # argument name lowercase (stats code uses X, Y by convention)
+    "N806",   # variable name lowercase (stats code uses X, Y by convention)
+    "N818",   # exception naming
+    "PLR0913", # many args (statistics orchestrators take several keyword-only knobs)
+    "PLR2004", # magic numbers (thresholds are inherent to statistics)
+    "PT011",  # Raises error is too broad
+    "PTH123", # Path.open instead of open
+    "RET504", # unnecessary assignment before return
+    "RET505", # unnecessary else before return
+    "S603",   # use of subprocess
+    "SIM102", # use a single if
+    "SLF001", # private access; pyright already checks this
+    "TC001",  # imports for only typing checking
+    "TC002",  # imports for only typing checking
+    "TC003",  # stdlib imports used only for typing
+    "TRY003", # Long exception messages
+    "TRY300", # exception else block
+    "UP031",  # formatting with % operator
+]
+
+[tool.ruff.lint.isort]
+force-single-line = true
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = [
+    "ANN201",  # missing return type annotation
+    "B018",    # useless expression
+    "INP001",  # implicit namespace package
+    "PLR2004", # magic numbers
+    "S101",    # use of assert
+    "T201",    # use of print
+]
