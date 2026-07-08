@@ -65,3 +65,6 @@ ENV/
 
 # Ruff
 .ruff_cache/
+
+# Shared Claude rules: local symlinks from ../claude-shared/link.sh; CI stages real copies
+.claude/rules/
