@@ -6,7 +6,9 @@ Per-build scaffold for quant-factory. You (the agent) build ONE trading-strategy
 
 - `qf/` — **shared harness; do not modify.** Import it. It owns the anti-leakage/anti-overfit
   guarantees: offline `LocalParquetSource`, chronological `split_oos`, net-of-cost `backtest`,
-  `CostModel` (incl. futures roll), `stats`, placebo `controls`.
+  `CostModel` (incl. futures roll), `stats`, placebo `controls`, and `forecast` (causal naive
+  baselines, forecast-error metrics, Diebold-Mariano test, forecast→position bridge — used by
+  forecast-factory runs).
 - `killtest/` — **your code** (keep the package name; don't rename). `config.py` (pre-registered
   spec), `signal.py` (prices→positions), `pipeline.py` (snapshot→verdict), `__main__.py` (entry
   point that logs the ALIVE/DEAD verdict).

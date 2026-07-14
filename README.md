@@ -8,7 +8,8 @@ PLACEHOLDER per-build scaffold for **quant-factory**. Each daily run, the agent 
 
 - **`qf/` — do not modify.** The shared, tested backtest harness: `DataSource`/`LocalParquetSource`
   (offline data access), `backtest` + `split_oos` (chronological OOS), `CostModel` (net-of-cost,
-  futures roll), `stats` (Sharpe/t-stat/drawdown/deflated-Sharpe/bootstrap), `controls` (placebos).
+  futures roll), `stats` (Sharpe/t-stat/drawdown/deflated-Sharpe/bootstrap), `controls` (placebos),
+  `forecast` (naive baselines, error metrics, Diebold-Mariano, forecast→position bridge).
 - **`killtest/` — the agent rewrites** (the package name stays `killtest`). `config.py`
   (pre-registered universe + OOS thresholds), `signal.py` (prices → positions), `pipeline.py`
   (snapshot → ALIVE/DEAD verdict), `__main__.py`.
